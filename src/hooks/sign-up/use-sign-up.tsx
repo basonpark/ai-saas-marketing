@@ -1,11 +1,16 @@
+"use client";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserRegistrationSchema } from "@/lib/auth.schema";
+import { UserRegistrationSchema } from "@/schemas/auth.schema";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { UserRegistrationProps } from "../../lib/auth.schema";
+import { UserRegistrationProps } from "../../schemas/auth.schema";
+import { onCompleteUserRegistration } from "../../actions/auth";
+import { z } from "zod";
+
+type UserRegistrationSchema = z.infer<typeof UserRegistrationSchema>;
 
 export const useSignUpForm = () => {
   const { toast } = useToast();
@@ -34,7 +39,7 @@ export const useSignUpForm = () => {
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       onNext((prev) => prev + 1);
-    } catch (erro: any) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.errors[0].longMessage,
@@ -89,4 +94,8 @@ export const useSignUpForm = () => {
       }
     }
   );
+
+  return { methods, onHandleSubmit, loading, onGenerateOTP };
 };
+
+export default useSignUpForm;

@@ -1,15 +1,14 @@
-import { z, ZodType } from "zod";
+import { ZodType, z } from 'zod'
 
 export type UserRegistrationProps = {
-  type: string;
-  fullname: string;
-  email: string;
-  confirmEmail: string;
-  password: string;
-  confirmPassword: string;
-  otp: string;
-};
-
+  type: string
+  fullname: string
+  email: string
+  confirmEmail: string
+  password: string
+  confirmPassword: string
+  otp: string
+}
 
 export const UserRegistrationSchema: ZodType<UserRegistrationProps> = z
   .object({
