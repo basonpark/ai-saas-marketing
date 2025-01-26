@@ -53,3 +53,28 @@ export const onGetBlogPosts = async () => {
     return [];
   }
 };
+
+export const onGetBlogPost = async (id: string) => {
+  try {
+    const postUrl = process.env.NEXT_PUBLIC_CLOUDWAYS_POSTS_URL;
+    if (!postUrl) return;
+    const post = await axios.get(`${postUrl}/${id}`);
+    if (post.data) {
+      const authorUrl = process.env.NEXT_PUBLIC_CLOUDWAYS_USERS_URL;
+      if (!authorUrl) return;
+      const author = await axios.get(`${authorUrl}${post.data.author}`);
+      if (author.data) {
+        return {
+          id: post.data.id,
+          title: post.data.title.rendered,
+          content: post.data.content.rendered,
+          author: author.data.name,
+          createdAt: new Date(post.data.date),
+        };
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    return null;
+  }
+};
