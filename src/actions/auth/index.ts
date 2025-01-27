@@ -36,30 +36,35 @@ export const onCompleteUserRegistration = async (
 
 export const onLoginUser = async () => {
   const user = await currentUser();
-  if (!user) redirectToSignIn();
-  else {
-    try {
-        const authenticated = await client.user.findUnique({
-            where: {
-                clerkId: user.id,
-            },
-            select: {
-          fullname: true,
-          id: true,
-          type: true,
-        },
-      });
-      if (authenticated) {
-        const domains = await onGetAllAccountDomains();
-        return {
-          status: 200,
-          user: authenticated,
-          domain: domains?.domains,
-        };
-      }
-     } catch (error) {
-        return { status: 400 }
-     }
+  if (!user) {
+    // Get the current request URL dynamically
+    const returnUrl = new URL('/dashboard', process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
+    return redirectToSignIn({ 
+      returnBackUrl: returnUrl.toString()
+    });
+  }
+  
+  try {
+    const authenticated = await client.user.findUnique({
+      where: {
+        clerkId: user.id,
+      },
+      select: {
+        fullname: true,
+        id: true,
+        type: true,
+      },
+    });
+    if (authenticated) {
+      const domains = await onGetAllAccountDomains();
+      return {
+        status: 200,
+        user: authenticated,
+        domain: domains?.domains,
+      };
+    }
+  } catch (error) {
+    return { status: 400 }
   }
   return true;
 };

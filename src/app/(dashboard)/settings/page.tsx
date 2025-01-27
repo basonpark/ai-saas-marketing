@@ -1,6 +1,8 @@
 import React from "react";
 import InfoBar from "@/components/infobar";
 import BillingSettings from "@/components/settings/billing-settings";
+import DarkModetoggle from "@/components/settings/dark-mode";
+import ChangePassword from "@/components/settings/change-password";
 
 type Props = {};
 
@@ -13,6 +15,8 @@ const Page = (props: Props) => {
       flex-col gap-10"
       >
         <BillingSettings />
+        <DarkModetoggle />
+        <ChangePassword />
       </div>
     </>
   );
