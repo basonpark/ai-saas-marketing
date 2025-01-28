@@ -43,7 +43,7 @@ export const useChangePassword = () => {
       if (updated) {
         reset();
         setLoading(false);
-        toast({ title: "Success", description: updated.message });
+        toast({ title: "Success!", description: updated.message });
       }
     } catch (error) {
       console.log(error);
