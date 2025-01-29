@@ -11,6 +11,35 @@ type Props = {};
 
 const DarkModetoggle = (props: Props) => {
   const { setTheme, theme } = useThemeMode();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+        <div className="lg:col-span-1">
+          <Section
+            label="Interface Theme"
+            message="Select or customize your UI theme "
+          />
+        </div>
+        <div className="lg:col-span-4 flex lg:flex-row flex-col items-start gap-5">
+          <div className="rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent">
+            <SystemMode />
+          </div>
+          <div className="rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent">
+            <LightMode />
+          </div>
+          <div className="rounded-2xl overflow-hidden cursor-pointer border-4 border-transparent">
+            <DarkMode />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
