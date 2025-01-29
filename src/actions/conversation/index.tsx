@@ -193,3 +193,18 @@ export const onOwnerSendMessage = async (
     console.log(error);
   }
 };
+
+export const onViewUnreadMessages = async (id: string) => {
+  try {
+    await client.chatMessage.updateMany({
+      where: {
+        chatRoomId: id,
+      },
+      data: {
+        seen: true,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

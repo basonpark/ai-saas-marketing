@@ -1,6 +1,6 @@
 import React from "react";
 import { onLoginUser } from "@/actions/auth";
-import { ChatProvider } from "@/context/user-chat-context";
+import { ChatProvider } from "@/context/use-chat-context";
 import SideBar from "@/components/sidebar";
 
 type Props = {

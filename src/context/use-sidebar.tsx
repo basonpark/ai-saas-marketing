@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useClerk } from "@clerk/nextjs";
-import { useChatContext } from "@/context/user-chat-context";
+import { useChatContext } from "@/context/use-chat-context";
 import { onToggleRealtime } from "@/actions/conversation";
 import { onGetConversationMode } from "@/actions/conversation";
 import { onGetDomainChatRooms } from "@/actions/conversation";
