@@ -13,6 +13,8 @@ import { onCreateHelpDeskQuestion, onUpdatePassword } from "@/actions/settings";
 import { ChangePasswordProps } from "@/schemas/auth.schema";
 import {
   DomainSettingsProps,
+  FilterQuestionsProps,
+  FilterQuestionsSchema,
   HelpDeskQuestionsProps,
   HelpDeskQuestionsSchema,
 } from "@/schemas/settings.schema";
@@ -24,7 +26,8 @@ import { onUpdateWelcomeMessage } from "@/actions/settings";
 import { onDeleteUserDomain } from "@/actions/settings";
 import { onGetAllHelpDeskQuestions } from "@/actions/settings";
 import { useEffect } from "react";
-
+import { onCreateFilterQuestions } from "@/actions/settings";
+import { onGetAllFilterQuestions } from "@/actions/settings";
 const upload = new UploadClient({
   publicKey: process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY as string,
 });
@@ -195,7 +198,6 @@ export const useHelpDesk = (id: string) => {
     register,
     errors,
     onSubmitQuestion,
-    onGetQuestions,
     loading,
     isQuestions,
   };
@@ -203,8 +205,51 @@ export const useHelpDesk = (id: string) => {
 
 export const useFilterQuestions = (id: string) => {
   const {
-    register={register}
-    errors={errors}
-    
-  }
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FilterQuestionsProps>({
+    resolver: zodResolver(FilterQuestionsSchema),
+  });
+
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isFilterQuestions, setIsFilterQuestions] = useState<
+    { id: string; question: string }[]
+  >([]);
+  const onAddFilterQuestions = handleSubmit(async (values) => {
+    setLoading(true);
+    const filterquestion = await onCreateFilterQuestions(id, values.question);
+    if (filterquestion) {
+      setIsFilterQuestions(filterquestion.questions!);
+      toast({
+        title: filterquestion.status === 200 ? "Success!" : "Error!",
+        description: filterquestion.message,
+      });
+      setLoading(false);
+      reset();
+    }
+  });
+
+  const onGetFilterQuestions = async () => {
+    setLoading(true);
+    const filterquestions = await onGetAllFilterQuestions(id);
+    if (filterquestions) {
+      setIsFilterQuestions(filterquestions.questions);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    onGetFilterQuestions();
+  }, []);
+
+  return {
+    register,
+    errors,
+    onAddFilterQuestions,
+    loading,
+    isFilterQuestions,
+  };
 };

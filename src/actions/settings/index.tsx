@@ -352,32 +352,34 @@ export const onCreateHelpDeskQuestion = async (
   answer: string
 ) => {
   try {
-    // Create the new help desk question
-    await client.helpDesk.create({
-      data: {
-        question,
-        answer,
-        domainId: id,
-      },
-    });
-
-    // Fetch all help desk questions for this domain
-    const allQuestions = await client.helpDesk.findMany({
+    const helpDeskQuestion = await client.domain.update({
       where: {
-        domainId: id,
+        id,
       },
-      select: {
-        id: true,
-        question: true,
-        answer: true,
+      data: {
+        helpdesk: {
+          create: {
+            question,
+            answer,
+          },
+        },
+      },
+      include: {
+        helpdesk: {
+          select: {
+            id: true,
+            question: true,
+            answer: true,
+          },
+        },
       },
     });
 
-    if (allQuestions) {
+    if (helpDeskQuestion) {
       return {
         status: 200,
         message: "New help desk question added",
-        questions: allQuestions,
+        questions: helpDeskQuestion.helpdesk,
       };
     }
 
